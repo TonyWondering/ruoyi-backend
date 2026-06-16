@@ -6,8 +6,8 @@
   },
   "deploy": {
     "startCommand": "java -jar app.jar",
-    "healthcheckPath": "/captchaImage",
-    "healthcheckTimeout": 30,
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }
