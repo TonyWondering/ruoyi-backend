@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CourseMapper">
+
+    <resultMap type="com.ruoyi.system.domain.Course" id="CourseResult">
+        <result property="courseId" column="course_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="category" column="category"/>
+        <result property="level" column="level"/>
+        <result property="hours" column="hours"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectCourseList" parameterType="com.ruoyi.system.domain.Course" resultMap="CourseResult">
+        select * from course
+        <where>
+            <if test="courseName != null and courseName != ''">AND course_name like concat('%', #{courseName}, '%')</if>
+            <if test="category != null and category != ''">AND category = #{category}</if>
+            <if test="status != null and status != ''">AND status = #{status}</if>
+        </where>
+        order by sort_order
+    </select>
+
+    <select id="selectCourseById" parameterType="Long" resultMap="CourseResult">
+        select * from course where course_id = #{courseId}
+    </select>
+
+    <insert id="insertCourse" parameterType="com.ruoyi.system.domain.Course" useGeneratedKeys="true" keyProperty="courseId">
+        insert into course (course_name, category, level, hours, cover_img, video_url, sort_order, status)
+        values (#{courseName}, #{category}, #{level}, #{hours}, #{coverImg}, #{videoUrl}, #{sortOrder}, #{status})
+    </insert>
+
+    <update id="updateCourse" parameterType="com.ruoyi.system.domain.Course">
+        update course
+        <set>
+            <if test="courseName != null">course_name = #{courseName},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="hours != null">hours = #{hours},</if>
+            <if test="coverImg != null">cover_img = #{coverImg},</if>
+            <if test="videoUrl != null">video_url = #{videoUrl},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        where course_id = #{courseId}
+    </update>
+
+    <delete id="deleteCourseById" parameterType="Long">
+        delete from course where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteCourseByIds" parameterType="Long">
+        delete from course where course_id in
+        <foreach item="courseId" collection="array" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+</mapper>

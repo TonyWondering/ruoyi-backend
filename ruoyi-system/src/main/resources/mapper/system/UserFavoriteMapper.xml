@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserFavoriteMapper">
+
+    <resultMap type="com.ruoyi.system.domain.UserFavorite" id="UserFavoriteResult">
+        <result property="favoriteId" column="favorite_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="selectFavoriteList" parameterType="com.ruoyi.system.domain.UserFavorite" resultMap="UserFavoriteResult">
+        select f.*, c.course_name from user_favorite f
+        left join course c on f.course_id = c.course_id
+        <where>
+            <if test="userId != null">AND f.user_id = #{userId}</if>
+        </where>
+        order by f.create_time desc
+    </select>
+
+    <insert id="insertFavorite" parameterType="com.ruoyi.system.domain.UserFavorite" useGeneratedKeys="true" keyProperty="favoriteId">
+        INSERT IGNORE INTO user_favorite (user_id, course_id) VALUES (#{userId}, #{courseId})
+    </insert>
+
+    <delete id="deleteFavorite" parameterType="Long">
+        delete from user_favorite where favorite_id = #{favoriteId}
+    </delete>
+
+    <delete id="deleteFavoriteByUserIdAndCourseId" parameterType="com.ruoyi.system.domain.UserFavorite">
+        delete from user_favorite where user_id = #{userId} and course_id = #{courseId}
+    </delete>
+</mapper>
